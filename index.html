@@ -7,11 +7,19 @@
   </head>
   <body>
     <div id="app">
-      <form id="countryForm">
-        <input type="text" id="countryInput">
-        <button id="countryButton">Search</button>
-      </form>
-      <div id="countryContainer"></div>
+      <section id="header">
+        <h1>My mini travel guide</h1>
+        <form id="countryForm">
+          <input type="text" id="countryInput">
+          <button id="countryButton">Search</button>
+        </form>
+      </section>
+      <section id="main">
+        <div id="resultContainer">
+          <div id="countryContainer"></div>
+          <div id="galleryContainer"></div>
+        </div>
+      </section>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -1,10 +1,14 @@
 import type { CountryData } from "./country/CountryData";
 import { getCountry } from "./country/countryServices";
+import { countryHtml } from "./createHtml/countryHtml";
+import { unsplashHtml } from "./createHtml/galleryHtml";
+import { weatherHtml } from "./createHtml/weatherHtml";
 import type { WeatherData } from "./weather/WeatherData";
 import { getWeather } from "./weather/weatherServices";
 
 const countryForm = document.getElementById("countryForm");
 const countryContainer = document.getElementById("countryContainer")!;
+const gallery = document.getElementById("galleryContainer");
 
 countryForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -12,62 +16,46 @@ countryForm?.addEventListener("submit", async (e) => {
     const countryInput = document.getElementById("countryInput") as HTMLInputElement;
     const countrySearch = countryInput.value.trim().toLowerCase();
 
+    try {
     const countries = await getCountry(countrySearch);
+    const country = countries.find(c => c.name.common.toLowerCase().includes(countrySearch));
 
-    const country = countries.find(c => c.name.common.toLowerCase() === countrySearch);
-
-    if(!country)return;
+    if(!country) {
+        alert("No matching country found");
+        return;
+    }
 
     const capital = country.capital?.[0];
-    if(!capital) return;
+    if(!capital) {
+        alert("No capital available");
+        return;
+    }
 
     const weather = await getWeather(capital);
 
-    renderTravelGuide(country, weather);
+    renderTravelGuide(country, weather, capital);
+    }catch (err) {
+        alert("Something went wrong while fetching data");
+    }
 });
 
-export const renderTravelGuide = (country: CountryData, weather: WeatherData) => {
+export const renderTravelGuide = async (country: CountryData, weather: WeatherData, city: string) => {
     if (!countryContainer) return;
     countryContainer.innerHTML = "";
-    // Country
-    const flag = document.createElement("img");
-    const countryName = document.createElement("h2");
-    const capital = document.createElement("h3");
-    const population = document.createElement("h3");
-    const language  = document.createElement("h3");
-    const currencies = document.createElement("h3");
+    
+        // Country HTML
+        const countryElements = countryHtml(country);
 
-    flag.src = country.flags.png;
-    flag.alt = country.name.common;
-    countryName.textContent = country.name.common;
-    capital.textContent = country.capital?.[0];
-    population.textContent = country.population.toLocaleString();
-    language.textContent = Object.values(country.languages ?? {}).join(",");
-    currencies.textContent = Object.values(country.currencies ?? {})
-        .map(c => `${c.name} (${c.symbol})`)
-        .join(",");
+        // Weather HTML
+        const weatherElements = weatherHtml(weather);
 
-        //Weather
-        const weatherContainer = document.createElement("div");
-        const city = document.createElement("p");
-        const localTime = document.createElement("p");
-        const degreeCelsius = document.createElement("p");
-        const weatherIcon = document.createElement("img");
-        const weatherCondition = document.createElement("p");
+        // Gallery HTML
+        const unsplashElements = await unsplashHtml(city);
 
-        city.textContent = weather.location.name;
-        localTime.textContent = weather.location.localtime;
-        degreeCelsius.textContent = weather.current.temp_c.toString();
-        weatherIcon.src = weather.current.condition.icon;
-        weatherIcon.alt = weather.current.condition.text;
-        weatherCondition.textContent = weather.current.condition.text;
-
-    weatherContainer.append(
-        city,
-        localTime,
-        degreeCelsius,
-        weatherIcon,
-        weatherCondition
-    )
-    countryContainer.append(flag, countryName, capital, population, language, currencies, weatherContainer);
+    countryContainer.append(...countryElements, ...weatherElements);
+    if(gallery){
+        // Reset gallery
+        gallery.innerHTML = "";
+        gallery?.append(...unsplashElements);
+    }
 }
