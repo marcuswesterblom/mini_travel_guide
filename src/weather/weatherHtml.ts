@@ -23,5 +23,5 @@ export const weatherHtml = (weather:WeatherData) => {
         weatherCondition
     )
     
-    return [city, localTime, degreeCelsius, weatherIcon, weatherCondition];
+    return weatherContainer;
 }

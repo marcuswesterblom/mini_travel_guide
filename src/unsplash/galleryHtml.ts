@@ -1,8 +1,9 @@
 import type { UnsplashData } from "./UnsplashData";
 
 
-export const unsplashHtml = (images:UnsplashData[]): HTMLElement[] => {
-    const elements: HTMLElement[] = [];
+export const unsplashHtml = (images: UnsplashData[]): HTMLElement => {
+    const galleryContainer = document.createElement("div");
+    galleryContainer.id = "galleryContainer";
 
     images.forEach(image => {
         const imgContainer = document.createElement("div");
@@ -12,8 +13,8 @@ export const unsplashHtml = (images:UnsplashData[]): HTMLElement[] => {
         img.alt = image.alt_description;
 
         imgContainer.appendChild(img);
-        elements.push(imgContainer);
+        galleryContainer.appendChild(imgContainer);
     });
 
-    return elements;
+    return galleryContainer;
 }

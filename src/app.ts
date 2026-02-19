@@ -7,8 +7,7 @@ import { getImages } from "./unsplash/unsplashService";
 
 const form = document.getElementById("form");
 const input = document.getElementById("input") as HTMLInputElement;
-const countryContainer = document.getElementById("country-container")!;
-const gallery = document.getElementById("gallery-container");
+const hero = document.getElementById("hero")!;
 const app = document.getElementById("app");
 const header = document.getElementById("header");
 
@@ -26,11 +25,8 @@ form?.addEventListener("submit", (e) => {
 
 export const renderTravelGuide = async (location: string) => {
     
-    countryContainer.innerHTML = "";
+    hero.innerHTML = "";
 
-    if(gallery) {
-        gallery.innerHTML = "";
-    }
     try {
         const weather = await getWeather(location);
         const countries = await getCountry(weather.location.country);
@@ -53,8 +49,8 @@ export const renderTravelGuide = async (location: string) => {
         // Gallery HTML
         const unsplashElements = unsplashHtml(images);
 
-    countryContainer.append(...countryElements, ...weatherElements);
-    gallery?.append(...unsplashElements);
+    hero.append(countryElements, weatherElements, unsplashElements);
+
     
     } catch (err) {
         alert("Something went wrong while fetching data");
