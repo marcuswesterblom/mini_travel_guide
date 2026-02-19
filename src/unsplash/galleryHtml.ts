@@ -1,9 +1,7 @@
-import type { UnsplashData } from "../unsplash/UnsplashData";
-import { getImages } from "../unsplash/unsplashService"
+import type { UnsplashData } from "./UnsplashData";
 
-export const unsplashHtml = async (city:string): Promise<HTMLElement[]> => {
-    
-    const images: UnsplashData[] = await getImages(city);
+
+export const unsplashHtml = (images:UnsplashData[]): HTMLElement[] => {
     const elements: HTMLElement[] = [];
 
     images.forEach(image => {

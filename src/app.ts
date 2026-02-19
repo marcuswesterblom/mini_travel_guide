@@ -1,48 +1,45 @@
-import type { CountryData } from "./country/CountryData";
 import { getCountry } from "./country/countryServices";
-import { countryHtml } from "./createHtml/countryHtml";
-import { unsplashHtml } from "./createHtml/galleryHtml";
-import { weatherHtml } from "./createHtml/weatherHtml";
-import type { WeatherData } from "./weather/WeatherData";
+import { countryHtml } from "./country/countryHtml";
+import { unsplashHtml } from "./unsplash/galleryHtml";
+import { weatherHtml } from "./weather/weatherHtml";
 import { getWeather } from "./weather/weatherServices";
+import { getImages } from "./unsplash/unsplashService";
 
-const countryForm = document.getElementById("countryForm");
+const form = document.getElementById("countryForm");
+const input = document.getElementById("countryInput") as HTMLInputElement;
 const countryContainer = document.getElementById("countryContainer")!;
 const gallery = document.getElementById("galleryContainer");
 
-countryForm?.addEventListener("submit", async (e) => {
+form?.addEventListener("submit", (e) => {
     e.preventDefault();
     
-    const countryInput = document.getElementById("countryInput") as HTMLInputElement;
-    const countrySearch = countryInput.value.trim().toLowerCase();
-
-    try {
-    const countries = await getCountry(countrySearch);
-    const country = countries.find(c => c.name.common.toLowerCase().includes(countrySearch));
-
-    if(!country) {
-        alert("No matching country found");
-        return;
+    const inputSearch = input.value.trim().toLowerCase();
+    if (inputSearch) {
+        renderTravelGuide(inputSearch);
     }
-
-    const capital = country.capital?.[0];
-    if(!capital) {
-        alert("No capital available");
-        return;
-    }
-
-    const weather = await getWeather(capital);
-
-    renderTravelGuide(country, weather, capital);
-    }catch (err) {
-        alert("Something went wrong while fetching data");
-    }
+    input.value = "";
 });
 
-export const renderTravelGuide = async (country: CountryData, weather: WeatherData, city: string) => {
-    if (!countryContainer) return;
-    countryContainer.innerHTML = "";
+export const renderTravelGuide = async (location: string) => {
     
+    countryContainer.innerHTML = "";
+
+    if(gallery) {
+        gallery.innerHTML = "";
+    }
+    try {
+        const weather = await getWeather(location);
+        const countries = await getCountry(weather.location.country);
+        const country = countries[0];
+        const images = await getImages(location);
+
+        if(!country) {
+            alert("No matching country found");
+            return;
+        }
+
+    // --- CREATE HTML ---
+
         // Country HTML
         const countryElements = countryHtml(country);
 
@@ -50,12 +47,12 @@ export const renderTravelGuide = async (country: CountryData, weather: WeatherDa
         const weatherElements = weatherHtml(weather);
 
         // Gallery HTML
-        const unsplashElements = await unsplashHtml(city);
+        const unsplashElements = unsplashHtml(images);
 
     countryContainer.append(...countryElements, ...weatherElements);
-    if(gallery){
-        // Reset gallery
-        gallery.innerHTML = "";
-        gallery?.append(...unsplashElements);
+    gallery?.append(...unsplashElements);
+    
+    } catch (err) {
+        alert("Something went wrong while fetching data");
     }
 }

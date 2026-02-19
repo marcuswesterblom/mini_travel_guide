@@ -1,4 +1,4 @@
-import type { WeatherData } from "../weather/WeatherData";
+import type { WeatherData } from "./WeatherData";
 
 export const weatherHtml = (weather:WeatherData) => {
     const weatherContainer = document.createElement("div");

@@ -1,4 +1,4 @@
-import type { CountryData } from "../country/CountryData";
+import type { CountryData } from "./CountryData";
 
 export const countryHtml = (country: CountryData) => {
     const flag = document.createElement("img");
