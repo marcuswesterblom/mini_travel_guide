@@ -5,16 +5,20 @@ import { weatherHtml } from "./weather/weatherHtml";
 import { getWeather } from "./weather/weatherServices";
 import { getImages } from "./unsplash/unsplashService";
 
-const form = document.getElementById("countryForm");
-const input = document.getElementById("countryInput") as HTMLInputElement;
-const countryContainer = document.getElementById("countryContainer")!;
-const gallery = document.getElementById("galleryContainer");
+const form = document.getElementById("form");
+const input = document.getElementById("input") as HTMLInputElement;
+const countryContainer = document.getElementById("country-container")!;
+const gallery = document.getElementById("gallery-container");
+const app = document.getElementById("app");
+const header = document.getElementById("header");
 
 form?.addEventListener("submit", (e) => {
     e.preventDefault();
     
     const inputSearch = input.value.trim().toLowerCase();
     if (inputSearch) {
+        app?.classList.add("active");
+        header?.classList.add("active");
         renderTravelGuide(inputSearch);
     }
     input.value = "";

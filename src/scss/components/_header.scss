@@ -1,0 +1,35 @@
+@use "/src/SCSS/base/mixins" as * ;
+@use "/src/SCSS/base/variables" as * ;
+
+#header {
+    background-color: $primary-color;
+    border-radius: $border-radius-25;
+    filter: $drop-shadow;
+    padding: 40px;
+    &.active {
+        width: 100%;
+        padding: 0;
+        border-radius: 0;
+        filter: none;
+    }
+    #h1-header {
+        @include flex($justify: stretch);
+        padding: $p20;
+        gap: $g10;
+        @include respond(md) {
+            justify-content: center;
+        }
+        }
+}
+#form {
+    padding: $p20;
+    @include flex;
+    button {
+        background-color: $accent-color;
+        height: 35.5px;
+        padding: 5px;
+        position: absolute;
+        transform: translateX(96.5px);
+        border-radius: 0px 4px 4px 0px;
+    }
+}

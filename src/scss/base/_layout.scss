@@ -1,0 +1,50 @@
+@use "variables" as *;
+* {
+    font-family: $family-font;
+    text-align: left;
+}
+
+h1{
+    font-size: $font-size-lg;
+    color: $accent-color;
+    font-weight: $weigth-700;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 0;
+}
+
+h2{
+    font-size: $font-size-lg;
+    font-weight: $weigth-600;
+}
+
+h3{
+    font-size: $font-size-md;
+    font-weight: $weigth-500;
+    margin: 0;
+}
+p {
+    color: $description-text;
+    margin: 0;
+}
+.svg{
+    height: 40px;
+    width: 40px;
+}
+.break {
+    display: block;
+    content: "";
+    height: 1px;
+    width: 100%;
+    background-color: $border-color;
+}
+
+input {
+    width: 210px;
+    padding: $p10;
+    border-radius: $border-radius-5;
+    border: $border;
+    &::placeholder{
+        color: $border-color;
+    }
+}
